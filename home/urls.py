@@ -19,10 +19,9 @@ from rest_framework.routers import DefaultRouter
 from home.views import StudentModelViewSet
 from home.views import StudentModelApiView
 
-
 router = DefaultRouter()
 router.register(r'yourmodels', StudentModelViewSet)
 urlpatterns = [
     path('', include(router.urls)),
-    path('Students/', StudentModelApiView.as_view())
+    path('Students/', StudentModelApiView.as_view()),
 ]

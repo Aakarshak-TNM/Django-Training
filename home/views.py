@@ -3,9 +3,11 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.views import APIView
-from .models import Student
+from .models import Student, Standard
 from django.views.decorators.csrf import csrf_exempt
-from .serializers import StudentModelSerializer
+from .serializers import StudentModelSerializer, StudentModelSerializerPost
+import string
+from urllib.parse import unquote
 # Create your views here.
 
 
@@ -23,12 +25,25 @@ class StudentModelViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentModelSerializer
 
-
 class StudentModelApiView(APIView):
     def get(self, request):
         student_id = request.query_params.get('id')
+        query_param = request.query_params.get('query', None)
+# "s"
+        if (query_param is not None):
+            try:
+                for query in query_param:
+                    if (query in string.ascii_letters):
+                        query_param = query
+                student_data = Student.objects.filter(
+                    name__contains=query_param)
+                student_serializer = StudentModelSerializer(
+                    student_data, many=True).data
+                return Response({'data': student_serializer}, status=status.HTTP_200_OK)
+            except Exception as e:
+                e = str(e)
+                return Response({"error": e}, status=status.HTTP_404_NOT_FOUND)
 
-        # Gets all students data
         if student_id is None:
             student_queryset = Student.objects.all().order_by('id')
 
@@ -36,7 +51,6 @@ class StudentModelApiView(APIView):
                 student_queryset, many=True).data
             return Response({'students': serialized_data}, status=status.HTTP_200_OK)
 
-        # Gets the single Student Data
         else:
             try:
                 student = Student.objects.get(id=student_id)
@@ -47,17 +61,19 @@ class StudentModelApiView(APIView):
 
     @csrf_exempt
     def post(self, request):
+        student_data = request.data
+        student_data['standard_name'] = Standard.objects.get(
+            standard_name=student_data['standard_name']).id
+        serializer = StudentModelSerializerPost(data=student_data)
         try:
-            student_req_body = request.data
-            serialized_data = StudentModelSerializer(data=student_req_body)
-            if serialized_data.is_valid():
-                serialized_data.save()
-                return Response({"data": serialized_data.data}, status=status.HTTP_201_CREATED)
-            else:
-                # Return a response with validation errors
-                return Response(serialized_data.errors, status=status.HTTP_400_BAD_REQUEST)
+            if serializer.is_valid():
+                serializer.save()
+                id = (serializer.data['id'])
+                student_instance = Student.objects.get(id=id)
+                student = StudentModelSerializer(student_instance)
+                return Response(student.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            # Handle any other exceptions and return an appropriate response
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
@@ -89,4 +105,10 @@ class StudentModelApiView(APIView):
                 return Response({"data": "Student is Deleted Succesfully"}, status=status.HTTP_200_OK)
             except Student.DoesNotExist:
                 return Response({"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
-            
+        else:
+            try:
+                student = Student.objects.all()
+                student.delete()
+                return Response({"data": "Students is Deleted Succesfully"}, status=status.HTTP_200_OK)
+            except Student.DoesNotExist:
+                return Response({"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
