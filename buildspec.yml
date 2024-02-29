@@ -1,0 +1,34 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+      django: 3.2
+    commands:
+      # Install system dependencies
+      - apt-get update -y
+      - apt-get install -y build-essential
+      # Install Python dependencies
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+
+  build:
+    commands:
+      # Run tests
+      - python manage.py test
+
+  post_build:
+    commands:
+      # Collect static files
+      - python manage.py collectstatic --noinput
+      # Migrate the database
+      - python manage.py migrate
+      # Package the application (e.g., Docker, zip, etc.)
+      # This step depends on the deployment method you choose
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
+  base-directory: 'build'
