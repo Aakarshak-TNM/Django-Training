@@ -3,11 +3,12 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.11
+      python: 3.9
     commands:
+      # Update system packages
+      - yum update -y
       # Install system dependencies
-      - apt-get update -y
-      - apt-get install -y build-essential
+      - yum install -y gcc
       # Install Python dependencies
       - pip install --upgrade pip
       - pip install -r requirements.txt
