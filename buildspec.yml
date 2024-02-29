@@ -4,7 +4,6 @@ phases:
   install:
     runtime-versions:
       python: 3.11
-      django: 3.2
     commands:
       # Install system dependencies
       - apt-get update -y
