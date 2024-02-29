@@ -7,7 +7,8 @@ from .models import Student, Standard
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import StudentModelSerializer, StudentModelSerializerPost
 import string
-from urllib.parse import unquote
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 # Create your views here.
 
 
@@ -24,6 +25,7 @@ def contact(request):
 class StudentModelViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentModelSerializer
+
 
 class StudentModelApiView(APIView):
     def get(self, request):
@@ -112,3 +114,44 @@ class StudentModelApiView(APIView):
                 return Response({"data": "Students is Deleted Succesfully"}, status=status.HTTP_200_OK)
             except Student.DoesNotExist:
                 return Response({"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+class SignUpAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        if not username or not email or not password:
+            return Response({'error': 'Please provide username, email, and password'}, status=400)
+
+        if User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists():
+            return Response({'error': 'Username or email already exists'}, status=400)
+
+        user = User.objects.create_user(username, email, password)
+        user.save()
+        return Response({'message': 'Signup successful'}, status=201)
+
+
+class LoginAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        email = username
+        if not username or not password:
+            return Response({'error': 'Please provide username or email and password'}, status=400)
+        if authenticate(username=username, password=password) == None:
+            try:
+                user = User.objects.get(email=email)
+                if user.check_password(password):
+                    return Response({'message': 'Login successful'}, status=200)
+                else:
+                    return Response({'error': 'Invalid email or password'}, status=401)
+            except User.DoesNotExist:
+                return Response({'error': 'User with this email does not exist'}, status=401)
+        else:
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                return Response({'message': 'Login successful'}, status=200)
+            else:
+                return Response({'error': 'Invalid username or password'}, status=401)

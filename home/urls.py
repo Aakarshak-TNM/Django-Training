@@ -17,11 +17,13 @@ from django.urls import path, include
 
 from rest_framework.routers import DefaultRouter
 from home.views import StudentModelViewSet
-from home.views import StudentModelApiView
+from home.views import StudentModelApiView, SignUpAPIView,LoginAPIView
 
 router = DefaultRouter()
 router.register(r'yourmodels', StudentModelViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('Students/', StudentModelApiView.as_view()),
+    path('signup/', SignUpAPIView.as_view()),
+    path('login/', LoginAPIView.as_view()),
 ]
