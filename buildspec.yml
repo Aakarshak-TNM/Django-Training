@@ -3,30 +3,25 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.11
+      python: 3.8
     commands:
-      # Install system dependencies
-      - dnf install -y python3-devel python3-pip
-      - dnf install -y postgresql-devel
-      # Install Python dependencies
-      - pip3 install --upgrade pip
-      - pip3 install -r requirements.txt
-
+      - echo Installing dependencies...
+      - pip install -r requirements.txt
+  pre_build:
+    commands:
+      - echo Running pre-build commands...
+      # You can add any pre-build commands here, such as collecting static files
+      - python manage.py collectstatic --noinput
   build:
     commands:
-      # Run tests
-      - python3 manage.py test
-
+      - echo Running migrations...
+      - python manage.py migrate
   post_build:
     commands:
-      # Apply database migrations
-      - python3 manage.py makemigrations
-      - python3 manage.py migrate
-      # Package the application (e.g., Docker, zip, etc.)
-      # This step depends on the deployment method you choose
+      - echo Build completed successfully!
+      # You may add additional commands for deployment here if necessary
 
 artifacts:
   files:
     - '**/*'
-  discard-paths: yes
-  base-directory: 'build'
+  base-directory: my_django_project
