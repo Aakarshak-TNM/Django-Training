@@ -1,20 +1,29 @@
 version: '3'
 
 services:
-  db:
-    image: postgres
-    environment:
-      POSTGRES_DB: db_name
-      POSTGRES_USER: db_user
-      POSTGRES_PASSWORD: db_password
-    ports:
-      - "5432:5432"
+  # db:
+  #   image: postgres
+  #   environment:
+  #     POSTGRES_DB: db_name
+  #     POSTGRES_USER: db_user
+  #     POSTGRES_PASSWORD: db_password
+  #   ports:
+  #     - "5432:5432"
 
   web:
-    image: aakarshak1/django_project
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # image: 590184051080.dkr.ecr.ap-south-1.amazonaws.com/django
     command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
       - .:/code
     ports:
       - "8000:8000"
-    depends_on:
-      - db
+    environment:
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_HOST=database-1.cbygo6qqe70y.ap-south-1.rds.amazonaws.com
+      - DB_PORT=5432
+    # depends_on:
+    #   - db
