@@ -1,27 +1,21 @@
-version: 0.2
+version: 0.1 
 
-phases:
-  install:
-    runtime-versions:
-      python: 3.11
-    commands:
-      - echo Installing dependencies...
-      - pip install -r requirements.txt
-  pre_build:
-    commands:
-      - echo Running pre-build commands...
-      # You can add any pre-build commands here, such as collecting static files
-      - python manage.py collectstatic --noinput
-  build:
-    commands:
-      - echo Running migrations...
-      - python manage.py migrate
-  post_build:
-    commands:
-      - echo Build completed successfully!
-      # You may add additional commands for deployment here if necessary
-
-artifacts:
-  files:
-    - '**/*'
-  base-directory: project1
+environment_variables: 
+   plaintext: 
+     DJANGO_SETTINGS_MODULE: config.settings.test 
+     SECRET_KEY: nosecret 
+     DATABASE_DEFAULT_URL: sqlite:///db1.sqlite3 
+     DATABASE_STREAMDATA_URL: sqlite:///db2.sqlite3 
+     OPBEAT_ENABLED: False 
+phases: 
+  pre_build: 
+    commands: 
+      - echo Prebuild ops 
+      - pip3 install -r requirements.txt 
+  build: 
+    commands: 
+      - echo Building the application 
+      - python manage.py runserver 
+  post_build: 
+    commands: 
+      - echo Build completed on `date`

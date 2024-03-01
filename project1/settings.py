@@ -89,26 +89,26 @@ WSGI_APPLICATION = 'project1.wsgi.application'
 #         'PORT': '5432',
 #     }
 # }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         # 'NAME': 'database-1',
-#         'USER': 'postgres',
-#         'PASSWORD': 'password',
-#         'HOST': 'database-1.cbygo6qqe70y.ap-south-1.rds.amazonaws.com',
-#         'PORT': '5432',
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'default_db_name'),
-        'USER': os.environ.get('DB_USER', 'default_db_user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'default_db_password'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        # 'NAME': 'database-1',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': 'database-1.cbygo6qqe70y.ap-south-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.environ.get('DB_NAME', 'default_db_name'),
+#         'USER': os.environ.get('DB_USER', 'default_db_user'),
+#         'PASSWORD': os.environ.get('DB_PASSWORD', 'default_db_password'),
+#         'HOST': os.environ.get('DB_HOST', 'localhost'),
+#         'PORT': os.environ.get('DB_PORT', '5432'),
+#     }
+# }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
