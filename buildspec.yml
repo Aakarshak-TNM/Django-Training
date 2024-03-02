@@ -13,7 +13,7 @@ phases:
       - apt-get update
       - apt-get install -y awscli
       - cd ${PROJECT_DIR}
-      - source ${VIRTUAL_ENV}/bin/activate
+      - ${VIRTUAL_ENV}/bin/activate
       - pip3 install -r ${REQUIREMENTS_FILE}
   build:
     commands:
