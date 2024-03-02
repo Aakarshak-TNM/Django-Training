@@ -15,6 +15,6 @@ source venv/bin/activate
 
 install requirements.txt
 pip install -r /home/ubuntu/Django-Training/requirements.txt
-
+pip install django
 # run server
 python3 manage.py runserver 0:8000
