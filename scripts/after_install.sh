@@ -17,4 +17,4 @@ install requirements.txt
 pip install -r /home/ubuntu/Django-Training/requirements.txt
 
 # run server
-python3 manage.py runserver 0:8000
+sudo python3 manage.py runserver 0:8000
