@@ -11,13 +11,13 @@ phases:
   pre_build:
     commands:
       - echo "Docker Login"
-      - docker login -u $Docker_Username -p $Docker_password
+      - $(docker login -u $Docker_Username -p $Docker_password)
 
   build:
     commands: 
       - echo "Install AWS CLI"
-      - sudo apt install awscli
-      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 590184051080.dkr.ecr.ap-south-1.amazonaws.com
+      - aws --version
+      - $(aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 590184051080.dkr.ecr.ap-south-1.amazonaws.com)
 
 artifacts:
   files:
