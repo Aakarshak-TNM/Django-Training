@@ -1,21 +1,31 @@
-version: 0.1 
+version: 0.1
 
-environment_variables: 
-   plaintext: 
-     DJANGO_SETTINGS_MODULE: config.settings.test 
-     SECRET_KEY: nosecret 
-     DATABASE_DEFAULT_URL: sqlite:///db1.sqlite3 
-     DATABASE_STREAMDATA_URL: sqlite:///db2.sqlite3 
-     OPBEAT_ENABLED: False 
-phases: 
-  pre_build: 
-    commands: 
-      - echo Prebuild ops 
-      - pip3 install -r requirements.txt 
-  build: 
-    commands: 
-      - echo Building the application 
-      - python manage.py runserver 
-  post_build: 
-    commands: 
-      - echo Build completed on `date`
+env:
+  variables:
+    PROJECT_DIR: "/home/ubuntu/Django-Training/"
+    REQUIREMENTS_FILE: "/home/ubuntu/Django-Training/requirements.txt"
+    VIRTUAL_ENV: "venv"
+
+phases:
+  pre_build:
+    commands:
+      - echo "Installing AWS CLI"
+      - apt-get update
+      - apt-get install -y awscli
+      - pip3 install -r ${REQUIREMENTS_FILE}
+  build:
+    commands:
+      - echo "No build commands specified for Django project"
+      - python manage.py makemigrations
+      - python manage.py migrate
+
+
+artifacts:
+  files:
+    - '**/*'
+
+deploy:
+  provider: CodeDeploy
+  deployment_group: "deployment group you created"
+  region: ap-south-1
+  wait-until-deployed: true
