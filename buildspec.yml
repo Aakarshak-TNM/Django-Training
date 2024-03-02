@@ -1,4 +1,4 @@
-version: 0.1
+version: 0.2
 
 env:
   variables:
@@ -9,24 +9,20 @@ env:
 phases:
   pre_build:
     commands:
-      - echo "Installing AWS CLI"
+      - echo "Installing Python dependencies"
       - apt-get update
-      - apt-get install -y awscli
+      - apt-get install -y python3-pip python3-venv
       - cd ${PROJECT_DIR}
-      - ${VIRTUAL_ENV}/bin/activate
+      - python3 -m venv ${VIRTUAL_ENV}
+      - source ${VIRTUAL_ENV}/bin/activate
       - pip3 install -r ${REQUIREMENTS_FILE}
+
   build:
     commands:
-      - echo "No build commands specified for Django project"
+      - echo "Running Django database migrations"
       - python ${PROJECT_DIR}manage.py makemigrations
       - python ${PROJECT_DIR}manage.py migrate
 
 artifacts:
   files:
     - '**/*'
-
-deploy:
-  provider: CodeDeploy
-  deployment_group: "deployment group you created"
-  region: ap-south-1
-  wait-until-deployed: true
