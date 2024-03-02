@@ -1,23 +1,23 @@
 version: 0.2
 
-env:
-  variables:
-    Docker_Username: "aakarshak1"
-    Image_name: ""
-  parameter-store:
-    Docker_password: "Technman@I2024!!"
+# env:
+#   variables:
+#     Docker_Username: "aakarshak1"
+#     Image_name: ""
+#   parameter-store:
+#     Docker_password: "Technman@I2024!!"
 
 phases:
   pre_build:
     commands:
       - echo "Docker Login"
-      - $(docker login -u $Docker_Username -p $Docker_password)
-
-  build:
-    commands: 
+      # - docker login -u $Docker_Username -p $Docker_password
       - echo "Install AWS CLI"
       - aws --version
-      - $(aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 590184051080.dkr.ecr.ap-south-1.amazonaws.com)
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 590184051080.dkr.ecr.ap-south-1.amazonaws.com
+  build:
+    commands: 
+      
 
 artifacts:
   files:
