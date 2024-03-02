@@ -12,7 +12,7 @@ phases:
       - echo "Installing Python dependencies"
       - apt-get update
       - apt-get install -y python3-pip python3-venv
-      - cd ${PROJECT_DIR}
+      - cd /home/ubuntu/Django-Training/
       - python3 -m venv ${VIRTUAL_ENV}
       - source ${VIRTUAL_ENV}/bin/activate
       - pip3 install -r ${REQUIREMENTS_FILE}
