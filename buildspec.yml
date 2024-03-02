@@ -2,23 +2,22 @@ version: 0.2
 
 env:
   variables:
-    PROJECT_DIR: "/home/ubuntu/Django-Training/"
-    REQUIREMENTS_FILE: "/home/ubuntu/Django-Training/requirements.txt"
-    VIRTUAL_ENV: "venv"
+    Docker_Username: "aakarshak1"
+    Image_name: ""
+  parameter-store:
+    Docker_password: "Technman@I2024!!"
 
 phases:
   pre_build:
     commands:
-      - echo "Installing Python dependencies"
-      - apt-get update
-      - apt-get install -y python3-pip python3-venv
-      - python3 -m venv ${VIRTUAL_ENV}
+      - echo "Docker Login"
+      - docker login -u $Docker_Username -p $Docker_password
 
   build:
     commands: 
-      - echo "Running Django database migrations!"
-      - python ${PROJECT_DIR}manage.py makemigrations
-      - python ${PROJECT_DIR}manage.py migrate
+      - echo "Install AWS CLI"
+      - sudo apt install awscli
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 590184051080.dkr.ecr.ap-south-1.amazonaws.com
 
 artifacts:
   files:
