@@ -28,3 +28,5 @@ sudo docker pull 590184051080.dkr.ecr.ap-south-1.amazonaws.com/django:latest
 
 # Build and start the Docker Compose services
 sudo docker-compose up -d
+
+# Docker Done!
