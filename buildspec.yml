@@ -12,6 +12,8 @@ phases:
       - echo "Installing AWS CLI"
       - apt-get update
       - apt-get install -y awscli
+      - cd ${PROJECT_DIR:}
+      - source venv\bin\activate
       - pip3 install -r ${REQUIREMENTS_FILE}
   build:
     commands:
