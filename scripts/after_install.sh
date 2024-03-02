@@ -13,7 +13,7 @@ cd /home/ubuntu/Django-Training/
 python3 -m venv venv
 source venv/bin/activate
 
-# install requirements.txt
+install requirements.txt
 pip install -r /home/ubuntu/Django-Training/requirements.txt
 # run server
-python3 -m manage runserver 0:8000
+screen -d -m python3 manage.py runserver 0:8000
