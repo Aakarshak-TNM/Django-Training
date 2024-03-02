@@ -17,6 +17,12 @@ cd /home/ubuntu/Django-Training/
 # pip install -r /home/ubuntu/Django-Training/requirements.txt
 # # run server
 # screen -d -m python3 manage.py runserver 0:8000
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+aws --version
+
 aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 590184051080.dkr.ecr.ap-south-1.amazonaws.com
 sudo docker pull 590184051080.dkr.ecr.ap-south-1.amazonaws.com/django:latest
 if [ $? -eq 0 ]; then
