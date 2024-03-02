@@ -13,8 +13,12 @@ sudo ./install auto
 
 # update os & install python3
 sudo apt-get update
-sudo apt-get install -y python3 python3-dev python3-pip python3-venv
-pip install --user --upgrade virtualenv
+# sudo apt-get install -y python3 python3-dev python3-pip python3-venv
+# pip install --user --upgrade virtualenv
+sudo apt-get install docker.io -y
+sudo systemctl start docker
+sudo systemctl enable docker
+
 
 # delete app
 sudo rm -rf /home/ubuntu/Django-Training
