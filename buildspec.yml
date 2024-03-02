@@ -19,7 +19,7 @@ phases:
       - echo "Virtual Environment starts"
       - source ${VIRTUAL_ENV}/bin/activate
       - pip3 install -r ${REQUIREMENTS_FILE} 
-      - echo "Running Django database migrations"
+      - echo "Running Django database migrations!"
       - python ${PROJECT_DIR}manage.py makemigrations
       - python ${PROJECT_DIR}manage.py migrate
 
