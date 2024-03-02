@@ -7,13 +7,13 @@ sudo pkill -f runserver
 # sudo pkill -f tailwind
 # sudo pkill -f node
 
-cd ${PROJECT_DIR}
+cd /home/ubuntu/Django-Training/
 
 # activate virtual environment
-python3 -m venv ${VIRTUAL_ENV}
-source ${VIRTUAL_ENV}/bin/activate
+python3 -m venv venv
+source venv/bin/activate
 
-# install requirements.txt
-pip install -r ${REQUIREMENTS_FILE}
+install requirements.txt
+pip install -r /home/ubuntu/Django-Training/requirements.txt
 # run server
 screen -d -m python3 manage.py runserver 0:8000
