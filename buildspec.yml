@@ -15,9 +15,7 @@ phases:
       - python3 -m venv ${VIRTUAL_ENV}
 
   build:
-    commands:
-      - echo "Virtual Environment starts"
-      - pip3 install -r ${REQUIREMENTS_FILE} 
+    commands: 
       - echo "Running Django database migrations!"
       - python ${PROJECT_DIR}manage.py makemigrations
       - python ${PROJECT_DIR}manage.py migrate
