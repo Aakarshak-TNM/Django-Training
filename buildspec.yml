@@ -12,15 +12,14 @@ phases:
       - echo "Installing AWS CLI"
       - apt-get update
       - apt-get install -y awscli
-      - cd ${PROJECT_DIR:}
-      - source venv\bin\activate
+      - cd ${PROJECT_DIR}
+      - source ${VIRTUAL_ENV}/bin/activate
       - pip3 install -r ${REQUIREMENTS_FILE}
   build:
     commands:
       - echo "No build commands specified for Django project"
-      - python manage.py makemigrations
-      - python manage.py migrate
-
+      - python ${PROJECT_DIR}manage.py makemigrations
+      - python ${PROJECT_DIR}manage.py migrate
 
 artifacts:
   files:
