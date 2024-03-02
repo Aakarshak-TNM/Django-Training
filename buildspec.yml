@@ -1,22 +1,30 @@
 version: 0.2
 
-# env:
-#   variables:
-#     Docker_Username: "aakarshak1"
-#     Image_name: ""
-#   parameter-store:
-#     Docker_password: "Technman@I2024!!"
-
 phases:
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+      - echo "Python Setup"
+      - python -m venv venv
+      - source venv/bin/activate
+      - pip install --upgrade pip  
   pre_build:
     commands:
-      - echo "Docker Login"
-      # - docker login -u $Docker_Username -p $Docker_password
-      - echo "Install AWS CLI"
+      - pip install -r requirements.txt
       - aws --version
+      - echo "Docker Login"
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 590184051080.dkr.ecr.ap-south-1.amazonaws.com
   build:
     commands: 
+      - echo"Python Migrations"
+      - python manage.py makemigrations
+      - python manage.py migrate
+
+      - echo "Docker Build and Push"
+      - docker build -t django .
+      - docker tag django:latest 590184051080.dkr.ecr.ap-south-1.amazonaws.com/django:latest
+      - docker push 590184051080.dkr.ecr.ap-south-1.amazonaws.com/django:latest
       
 
 artifacts:
