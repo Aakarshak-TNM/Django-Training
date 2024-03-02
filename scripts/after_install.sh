@@ -30,14 +30,7 @@ export AWS_DEFAULT_REGION=ap-south-1
 
 aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 590184051080.dkr.ecr.ap-south-1.amazonaws.com
 # sudo docker pull 590184051080.dkr.ecr.ap-south-1.amazonaws.com/django:latest
-if [ $? -eq 0 ]; then
-    echo "Docker image pulled successfully"
-    # Run your Docker container with appropriate options
-    # You can add more options like port mappings, volumes, environment variables, etc., as needed
+
+
 sudo docker-compose build
 sudo docker-compose up
-
-else
-    echo "Failed to pull Docker image from Amazon ECR"
-    exit 1
-fi
