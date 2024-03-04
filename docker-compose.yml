@@ -28,4 +28,4 @@ services:
       ports:
         - "3000:4173"
       depends_on:
-        - db
+        - web
