@@ -53,6 +53,9 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
+    'http://127.0.0.1:5500',
+    'http://localhost:4173',
+    'http://3.108.44.64:3000',
 ]
 
 ROOT_URLCONF = 'project1.urls'
@@ -102,10 +105,10 @@ WSGI_APPLICATION = 'project1.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'default_db_name'),
-        'USER': os.environ.get('DB_USER', 'default_db_user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'default_db_password'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'NAME': os.environ.get('DB_NAME', 'postgres'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'password'),
+        'HOST': os.environ.get('DB_HOST', 'database-1.cbygo6qqe70y.ap-south-1.rds.amazonaws.com'),
         'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
