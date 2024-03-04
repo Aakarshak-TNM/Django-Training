@@ -25,3 +25,4 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 # delete app
 sudo rm -rf /home/ubuntu/Django-Training
+

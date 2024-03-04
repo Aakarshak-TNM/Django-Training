@@ -22,5 +22,10 @@ services:
       - DB_PASSWORD=password
       - DB_HOST=database-1.cbygo6qqe70y.ap-south-1.rds.amazonaws.com
       - DB_PORT=5432
-    # depends_on:
-    #   - db
+
+  react:
+      image: 590184051080.dkr.ecr.ap-south-1.amazonaws.com/react
+      ports:
+        - "3000:4173"
+      depends_on:
+        - db
