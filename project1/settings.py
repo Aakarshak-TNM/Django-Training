@@ -56,6 +56,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5500',
     'http://localhost:4173',
     'http://3.108.44.64:3000',
+    'http://13.233.83.63:3000',
 ]
 
 ROOT_URLCONF = 'project1.urls'
