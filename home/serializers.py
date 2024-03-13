@@ -20,3 +20,10 @@ class StudentModelSerializer(serializers.ModelSerializer):
         if obj.standard_name:
             return obj.standard_name.standard_name
         return None
+
+
+class StandardModelSerializerPost(serializers.ModelSerializer):
+
+    class Meta:
+        model = Standard
+        fields = '__all__'

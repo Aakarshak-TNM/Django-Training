@@ -5,10 +5,11 @@ from rest_framework import status
 from rest_framework.views import APIView
 from .models import Student, Standard
 from django.views.decorators.csrf import csrf_exempt
-from .serializers import StudentModelSerializer, StudentModelSerializerPost
+from .serializers import StudentModelSerializer, StudentModelSerializerPost, StandardModelSerializerPost
 import string
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.utils import timezone
 # Create your views here.
 
 
@@ -121,15 +122,29 @@ class SignUpAPIView(APIView):
         username = request.data.get('username')
         email = request.data.get('email')
         password = request.data.get('password')
+        user_type = request.data.get('user_type')
 
-        if not username or not email or not password:
-            return Response({'error': 'Please provide username, email, and password'}, status=400)
+        if not username or not email or not password or not user_type:
+            return Response({'error': 'Please provide username, email, password, and user_type'}, status=400)
 
         if User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists():
             return Response({'error': 'Username or email already exists'}, status=400)
 
-        user = User.objects.create_user(username, email, password)
-        user.save()
+        if user_type not in ['teacher', 'student']:
+            return Response({'error': 'Invalid user_type. Must be "teacher" or "student"'}, status=400)
+
+        # Create user based on user_type
+        if user_type == 'teacher':
+            user = User.objects.create_user(username, email, password)
+            # Additional logic specific to teachers
+            user.is_staff = True  # Make teacher a staff user
+            user.save()
+        elif user_type == 'student':
+            user = User.objects.create_user(username, email, password)
+            # Additional logic specific to students
+            user.is_staff = False  # Make student a non-staff user
+            user.save()
+
         return Response({'message': 'Signup successful'}, status=201)
 
 
@@ -143,6 +158,8 @@ class LoginAPIView(APIView):
         if authenticate(username=username, password=password) == None:
             try:
                 user = User.objects.get(email=email)
+                user.last_login = timezone.now()
+                user.save()
                 if user.check_password(password):
                     return Response({'message': 'Login successful'}, status=200)
                 else:
@@ -151,7 +168,26 @@ class LoginAPIView(APIView):
                 return Response({'error': 'User with this email does not exist'}, status=401)
         else:
             user = authenticate(username=username, password=password)
+
+            user.last_login = timezone.now()
+            user.save()
+
             if user is not None:
                 return Response({'message': 'Login successful'}, status=200)
             else:
                 return Response({'error': 'Invalid username or password'}, status=401)
+
+
+class StandardModelApiView(APIView):
+    @csrf_exempt
+    def post(self, request):
+        standard_data = request.data
+        standard_name = standard_data
+        serializer = StandardModelSerializerPost(data=standard_name)
+        try:
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
