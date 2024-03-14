@@ -14,7 +14,6 @@ class Standard(models.Model):
 
 
 class Student(models.Model):
-    teacher = models.ForeignKey(User, on_delete=models.CASCADE,null=True, blank=True)
     name = models.CharField(max_length=20)
     rollno = models.IntegerField()
     standard = models.CharField(max_length=10)

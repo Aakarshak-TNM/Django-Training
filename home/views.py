@@ -10,6 +10,9 @@ import string
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.utils import timezone
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
+
 # Create your views here.
 
 
@@ -29,42 +32,45 @@ class StudentModelViewSet(viewsets.ModelViewSet):
 
 
 class StudentModelApiView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
+        user = request.user
         student_id = request.query_params.get('id')
         query_param = request.query_params.get('query', None)
 # "s"
-        if (query_param is not None):
-            try:
-                for query in query_param:
-                    if (query in string.ascii_letters):
-                        query_param = query
-                student_data = Student.objects.filter(
-                    name__contains=query_param)
-                student_serializer = StudentModelSerializer(
-                    student_data, many=True).data
-                return Response({'data': student_serializer}, status=status.HTTP_200_OK)
-            except Exception as e:
-                e = str(e)
-                return Response({"error": e}, status=status.HTTP_404_NOT_FOUND)
-
-        if student_id is None:
-            student_queryset = Student.objects.all().order_by('id')
-
-            serialized_data = StudentModelSerializer(
-                student_queryset, many=True).data
-            return Response({'students': serialized_data}, status=status.HTTP_200_OK)
-
+        if not user.is_staff:
+            return Response({"error": "You are not authorized to access this resource"}, status=status.HTTP_403_FORBIDDEN)
         else:
-            try:
-                student = Student.objects.get(id=student_id)
-                serialized_data = StudentModelSerializer(student).data
-                return Response({"data": serialized_data}, status=status.HTTP_200_OK)
-            except Student.DoesNotExist:
-                return Response({"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
+            if (query_param is not None):
+                try:
+                    for query in query_param:
+                        if (query in string.ascii_letters):
+                            query_param = query
+                    student_data = Student.objects.filter(
+                        name__contains=query_param)
+                    student_serializer = StudentModelSerializer(
+                        student_data, many=True).data
+                    return Response({'data': student_serializer}, status=status.HTTP_200_OK)
+                except Exception as e:
+                    e = str(e)
+                    return Response({"error": e}, status=status.HTTP_404_NOT_FOUND)
+            if student_id is None:
+                student_queryset = Student.objects.all().order_by('id')
+                serialized_data = StudentModelSerializer(
+                    student_queryset, many=True).data
+                return Response({'students': serialized_data}, status=status.HTTP_200_OK)
+            else:
+                try:
+                    student = Student.objects.get(id=student_id)
+                    serialized_data = StudentModelSerializer(student).data
+                    return Response({"data": serialized_data}, status=status.HTTP_200_OK)
+                except Student.DoesNotExist:
+                    return Response({"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
 
     @csrf_exempt
     def post(self, request):
         student_data = request.data
+        print(student_data)
         student_data['standard_name'] = Standard.objects.get(
             standard_name=student_data['standard_name']).id
         serializer = StudentModelSerializerPost(data=student_data)
@@ -144,7 +150,6 @@ class SignUpAPIView(APIView):
             # Additional logic specific to students
             user.is_staff = False  # Make student a non-staff user
             user.save()
-
         return Response({'message': 'Signup successful'}, status=201)
 
 
@@ -160,8 +165,13 @@ class LoginAPIView(APIView):
                 user = User.objects.get(email=email)
                 user.last_login = timezone.now()
                 user.save()
+                refresh = RefreshToken.for_user(user)
+                token = {
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                }
                 if user.check_password(password):
-                    return Response({'message': 'Login successful'}, status=200)
+                    return Response({'message': 'Login successful', 'token': token}, status=200)
                 else:
                     return Response({'error': 'Invalid email or password'}, status=401)
             except User.DoesNotExist:
@@ -171,9 +181,13 @@ class LoginAPIView(APIView):
 
             user.last_login = timezone.now()
             user.save()
-
+            refresh = RefreshToken.for_user(user)
+            token = {
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }
             if user is not None:
-                return Response({'message': 'Login successful'}, status=200)
+                return Response({'message': 'Login successful', 'token': token}, status=200)
             else:
                 return Response({'error': 'Invalid username or password'}, status=401)
 
