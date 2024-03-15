@@ -75,6 +75,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://3.108.44.64:3000',
     'http://13.233.83.63:3000',
+    'https://master.d1mzkxxxp9hvbh.amplifyapp.com',
 ]
 
 ROOT_URLCONF = 'project1.urls'
