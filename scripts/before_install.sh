@@ -3,19 +3,19 @@
 sudo rm -rf /home/ubuntu/install
 
 # install CodeDeploy agent
-sudo apt-get -y update
-sudo apt-get -y install ruby
-sudo apt-get -y install wget
+sudo yum -y update
+sudo yum -y install ruby
+sudo yum -y install wget
 cd /home/ubuntu
 wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install
 sudo chmod +x ./install 
 sudo ./install auto
 
 # update os & install python3
-sudo apt-get update
-# sudo apt-get install -y python3 python3-dev python3-pip python3-venv
+sudo yum update
+# sudo yum install -y python3 python3-dev python3-pip python3-venv
 # pip install --user --upgrade virtualenv
-sudo apt-get install docker.io -y
+sudo yum install docker.io -y
 sudo systemctl start docker
 sudo systemctl enable docker
 
