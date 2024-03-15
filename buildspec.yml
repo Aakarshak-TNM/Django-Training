@@ -18,9 +18,9 @@ phases:
   build:
     commands: 
       - echo "Docker Build and Push Image!"
-      - docker build -t django .
-      - docker tag django:latest 590184051080.dkr.ecr.ap-south-1.amazonaws.com/django:latest
-      - docker push 590184051080.dkr.ecr.ap-south-1.amazonaws.com/django:latest
+      - docker build -t django-ecr .
+      - docker tag django-ecr:latest 590184051080.dkr.ecr.ap-south-1.amazonaws.com/django-ecr:latest
+      - docker push 590184051080.dkr.ecr.ap-south-1.amazonaws.com/django-ecr:latest
       
 
 artifacts:

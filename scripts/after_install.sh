@@ -23,7 +23,7 @@ export AWS_DEFAULT_REGION=ap-south-1
 # Log in to Amazon ECR registry
 aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 590184051080.dkr.ecr.ap-south-1.amazonaws.com
 # Pull the Docker image from Amazon ECR (if needed)
-sudo docker pull 590184051080.dkr.ecr.ap-south-1.amazonaws.com/django:latest
+sudo docker pull 590184051080.dkr.ecr.ap-south-1.amazonaws.com/django-ecr:latest
 # Build and start the Docker Compose services
 sudo docker-compose up -d
 
